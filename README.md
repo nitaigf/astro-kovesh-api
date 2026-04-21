@@ -207,6 +207,34 @@ make dev
 make test
 ```
 
+## Git Flow (Padrao do Projeto)
+
+Este repositorio adota Git Flow como padrao de trabalho.
+
+Fluxo:
+
+- `main`: producao
+- `develop`: integracao
+- `feature/*`, `release/*`, `hotfix/*`
+
+Comandos utilitarios:
+
+```bash
+make git-init
+make git-remote-origin ORIGIN_URL=git@github.com:nitaigf/astro-kovesh.git
+make git-flow-init
+make git-flow-feature-start NAME=minha-feature
+make git-flow-feature-finish NAME=minha-feature
+make git-flow-release-start NAME=0.1.0
+make git-flow-release-finish NAME=0.1.0
+make git-flow-hotfix-start NAME=0.1.1
+make git-flow-hotfix-finish NAME=0.1.1
+```
+
+Guia detalhado:
+
+- `docs/GIT_FLOW.md`
+
 ## Contrato inicial da API
 
 ### Healthcheck
