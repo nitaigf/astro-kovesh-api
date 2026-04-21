@@ -10,13 +10,3 @@ services:
     restart: unless-stopped
     ports:
       - "8010:8010"
-
-  web:
-    build:
-      context: ./web
-    container_name: astro-kovesh-web
-    restart: unless-stopped
-    ports:
-      - "5173:80"
-    depends_on:
-      - api
