@@ -134,8 +134,8 @@ Observacao sobre engine astrologica:
 
 Arquivos de dependencias:
 
-- `api/requirements.txt`: runtime minimo
-- `api/requirements-astro.txt`: dependencias astrologicas nativas
+- `api/requirements.txt`: runtime de producao, incluindo dependencias astrologicas
+- `api/requirements-astro.txt`: dependencias astrologicas nativas compartilhadas
 - `api/requirements-dev.txt`: runtime + astrologia + testes
 
 ## Makefile
