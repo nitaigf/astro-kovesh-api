@@ -9,7 +9,10 @@ from app.utils.datetime_utils import combine_date_time
 
 
 class ChartServiceError(Exception):
-    pass
+    def __init__(self, code: str, message: str) -> None:
+        super().__init__(message)
+        self.code = code
+        self.message = message
 
 
 class ChartService:
@@ -22,7 +25,7 @@ class ChartService:
         try:
             local_naive_dt = combine_date_time(payload.date, payload.time)
         except ValueError as exc:
-            raise ChartServiceError(str(exc)) from exc
+            raise ChartServiceError("invalid_datetime", str(exc)) from exc
 
         location = payload.location
 
@@ -43,13 +46,13 @@ class ChartService:
                 explicit_timezone=payload.timezone or location.timezone,
             )
         except GeocodingRateLimitError as exc:
-            raise ChartServiceError(f"geocoding_quota_exceeded: {exc}") from exc
+            raise ChartServiceError("geocoding_quota_exceeded", str(exc)) from exc
         except GeocodingError as exc:
-            raise ChartServiceError(f"geocoding_failed: {exc}") from exc
+            raise ChartServiceError("geocoding_failed", str(exc)) from exc
         except TimezoneResolutionError as exc:
-            raise ChartServiceError(f"timezone_resolution_failed: {exc}") from exc
+            raise ChartServiceError("timezone_resolution_failed", str(exc)) from exc
         except Exception as exc:
-            raise ChartServiceError(f"external_service_failed: {exc}") from exc
+            raise ChartServiceError("external_service_failed", str(exc)) from exc
 
         local_aware_dt = local_naive_dt.replace(tzinfo=ZoneInfo(timezone_name))
         utc_dt = local_aware_dt.astimezone(timezone.utc)
@@ -63,7 +66,7 @@ class ChartService:
                 house_system=payload.house_system.value,
             )
         except AstrologyEngineUnavailableError as exc:
-            raise ChartServiceError(f"astrology_engine_unavailable: {exc}") from exc
+            raise ChartServiceError("astrology_engine_unavailable", str(exc)) from exc
 
         return {
             "normalized_input": {

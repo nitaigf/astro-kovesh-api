@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     app_name: str = "Astro Kovesh API"
     app_env: str = "development"
     app_host: str = "0.0.0.0"
-    app_port: int = 8000
+    app_port: int = 8010
     frontend_url: str = "http://localhost:5173"
 
     cors_origins: str = "http://localhost:5173"

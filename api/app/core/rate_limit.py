@@ -46,7 +46,7 @@ class IpRateLimitMiddleware(BaseHTTPMiddleware):
                 return JSONResponse(
                     status_code=429,
                     content={
-                        "error": {
+                        "detail": {
                             "code": "rate_limit_exceeded",
                             "message": "Rate limit exceeded. Try again in a minute.",
                         }

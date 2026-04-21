@@ -99,11 +99,13 @@ Contrato com o frontend:
 - o frontend deve consumir somente endpoints versionados (`/v1/*`)
 - a URL da API deve ser configurada externamente (`VITE_API_BASE_URL` no web)
 - formato de erro deve permanecer estavel (`detail.code` e `detail.message`)
+- `POST /v1/chart` pode retornar `404` para localizacao nao encontrada
+- `POST /v1/chart` pode retornar `429` para rate limit ou quota de geocoding
 
 Observacao sobre engine astrologica:
 
 - Quando o runtime nao suporta extensoes nativas C, a API continua de pe.
-- Nessa situacao, `POST /v1/chart` retorna `503` com mensagem `astrology_engine_unavailable`.
+- Nessa situacao, `POST /v1/chart` retorna `503` com `detail.code=astrology_engine_unavailable`.
 
 Arquivos de dependencias:
 
