@@ -235,6 +235,14 @@ Guia detalhado:
 
 - `docs/GIT_FLOW.md`
 
+## Diretrizes do Copilot
+
+As instrucoes para colaboracao com Copilot estao em:
+
+- `.github/copilot-instructions.md`
+
+Esse arquivo descreve stack, arquitetura, padrao visual e principios de evolucao incremental com foco em performance, seguranca e respeito a limites de uso em APIs/servicos gratuitos.
+
 ## Contrato inicial da API
 
 ### Healthcheck
