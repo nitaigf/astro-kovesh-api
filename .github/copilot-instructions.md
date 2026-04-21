@@ -1,59 +1,42 @@
-# Copilot Instructions
+# Copilot Instructions - Astro Kovesh API
 
-## Product Intent
-- The public API is the main product.
-- The web frontend is a showcase and consumption layer for the API.
-- Prioritize API reliability, consistency, and documentation quality over visual extras.
+## Product Focus
+- This repository owns the public astrology API.
+- API stability, deterministic contracts, and clear error semantics are top priorities.
+- Frontend concerns are out of scope unless they impact API contracts directly.
 
-## Current Technology Stack
-- API: Python 3.12+, FastAPI, Pydantic v2, Uvicorn.
-- Astrology and geo stack: pyswisseph, geopy (Nominatim), timezonefinder.
-- Web: SolidJS, Vite, TypeScript, Bun, Three.js.
-- Runtime and delivery: Docker Compose, API container, static web container (Nginx).
+## Stack
+- Python 3.12+
+- FastAPI
+- Pydantic v2
+- Uvicorn
+- Geopy (Nominatim)
+- TimezoneFinder
+- Swiss Ephemeris (`pyswisseph`, optional by runtime)
 
-## Architecture Pattern (Current)
-- Monorepo with separate roots: api and web.
-- Backend organized in simple layered modules:
-  - routes for HTTP interface
-  - schemas for request/response contracts
-  - services for business logic (geocoding, timezone, astrology)
-  - core for config and middleware
-  - utils for shared helpers
-- Keep modules cohesive and explicit. Avoid premature abstraction.
+## Architecture Rules
+- Keep clear layering:
+  - `api/routes` for HTTP interface
+  - `schemas` for request/response contracts
+  - `services` for business logic
+  - `core` for config/middleware
+  - `utils` for shared helpers
+- Keep business rules in services, not in routes.
+- Preserve backward compatibility on `/v1/*` whenever possible.
 
-## Visual Pattern (Current)
-- Cosmic procedural background with subtle motion and depth.
-- Central glass card with strong readability and contrast.
-- Elegant, minimal, modern UI, responsive first.
-- Motion and effects must support content, never distract from data.
+## Contract Discipline
+- Do not break response shape without documenting and versioning.
+- Keep stable error payloads (`detail.code`, `detail.message`).
+- Explicitly map external-provider errors (geocoding/timezone/engine availability).
 
-## Delivery Philosophy
-- Keep it simple.
-- Grow incrementally.
-- Evolve in an organized, organic way.
-- Preserve clean boundaries, explicit contracts, and maintainability.
-- Prefer pragmatic decisions that deliver value quickly while keeping technical debt controlled.
+## Runtime and Delivery
+- `.env` is mandatory for local runtime.
+- Dockerfile and docker-compose in this repo are API-only.
+- Vercel deploy targets `api/` root with `api/index.py` entrypoint.
+- If native C extension runtime is unavailable, fail gracefully with explicit `503 astrology_engine_unavailable` behavior.
 
-## Performance and Security Priorities
-- Validate all inputs strictly.
-- Keep API payloads stable and predictable.
-- Prefer low-overhead solutions before introducing heavy infra.
-- Use timeouts and defensive error handling on external calls.
-- Keep CORS, rate limiting, and environment-based config explicit and reviewable.
-
-## Usage Limits and Free-Tier Constraints
-- This is a free product and a public repository.
-- Respect limits of public upstream providers (especially geocoding).
-- Respect free-tier hosting limits (including Vercel) and avoid wasteful usage patterns.
-- Always design with quota awareness:
-  - limit request rates
-  - reduce redundant calls
-  - fail clearly when quotas are exceeded
-  - preserve useful fallback paths (manual lat/lng/timezone)
-
-## Implementation Guidelines for Future Changes
-- API-first: add or evolve API contracts before frontend refinements.
-- Keep backward compatibility whenever possible.
-- Document important decisions in README and related docs when behavior changes.
-- Add or update tests for every non-trivial behavior change.
-- Do not introduce database, auth, billing, or complex infra unless explicitly requested.
+## Quality Bar
+- Add or update tests for any non-trivial behavior change.
+- Validate inputs strictly.
+- Keep external calls bounded by timeout and quota-aware limits.
+- Prefer simple, explicit code over abstraction-heavy designs.

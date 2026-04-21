@@ -2,9 +2,15 @@
 
 API publica de dados astrologicos do projeto Astro Kovesh.
 
-O frontend foi separado para outro repositorio:
+Repositorio do frontend:
 
 - `nitaigf/astro-kovesh-web`
+
+Repositorio pai (orquestracao, contratos e docs compartilhadas):
+
+- `nitaigf/astro-kovesh`
+
+Documentacao operacional compartilhada (incluindo Git Flow) fica no repo pai.
 
 ## Stack
 
@@ -32,6 +38,7 @@ O frontend foi separado para outro repositorio:
 │   ├── requirements-dev.txt
 │   └── .env.example
 ├── bruno/astro-kovesh/
+├── .github/copilot-instructions.md
 ├── docker-compose.yml
 └── README.md
 ```
@@ -87,6 +94,12 @@ Configuracao:
 - Entry point: `api/index.py`
 - Configuracao: `api/vercel.json`
 
+Contrato com o frontend:
+
+- o frontend deve consumir somente endpoints versionados (`/v1/*`)
+- a URL da API deve ser configurada externamente (`VITE_API_BASE_URL` no web)
+- formato de erro deve permanecer estavel (`detail.code` e `detail.message`)
+
 Observacao sobre engine astrologica:
 
 - Quando o runtime nao suporta extensoes nativas C, a API continua de pe.
@@ -116,3 +129,7 @@ Fluxo adotado:
 - `main`: producao
 - `develop`: integracao
 - `feature/*`, `release/*`, `hotfix/*`
+
+Observacao:
+
+- quando usado via repositorio pai com submodulos, manter branch do submodulo alinhada com a branch do pai (`main` com `main`, `develop` com `develop`).
