@@ -93,6 +93,25 @@ Configuracao:
 - Root Directory: `api`
 - Entry point: `api/index.py`
 - Configuracao: `api/vercel.json`
+- em ambiente serverless, a importacao de `pyswisseph` pode falhar; a API deve continuar no ar e retornar `503` no endpoint de mapa quando a engine nativa nao estiver disponivel
+
+Variaveis recomendadas na Vercel para a API:
+
+- `APP_NAME=Astro Kovesh API`
+- `APP_ENV=production`
+- `FRONTEND_URL=https://astro-kovesh-web.vercel.app`
+- `CORS_ORIGINS=https://astro-kovesh-web.vercel.app`
+- `REQUEST_TIMEOUT_SECONDS=8`
+- `DEFAULT_TIMEZONE=UTC`
+- `GEOCODER_USER_AGENT=astro-kovesh/0.1`
+- `GEOCODER_CALLS_PER_MINUTE=30`
+- `GEOCODER_MIN_SECONDS_BETWEEN_CALLS=1`
+- `IP_RATE_LIMIT_PER_MINUTE=60`
+
+Observacoes para a Vercel:
+
+- `APP_HOST` e `APP_PORT` nao sao necessarios no deploy serverless
+- `VITE_API_BASE_URL` nao deve ser configurada no projeto da API; essa variavel pertence ao projeto do frontend
 
 Contrato com o frontend:
 

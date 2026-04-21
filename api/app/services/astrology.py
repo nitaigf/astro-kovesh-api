@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 
 try:
     import swisseph as swe
-except ModuleNotFoundError:
+except Exception:
     swe = None
 
 from app.schemas.chart import Aspect, HousePosition
