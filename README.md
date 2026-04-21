@@ -95,6 +95,12 @@ Configuracao:
 - Configuracao: `api/vercel.json`
 - em ambiente serverless, a importacao de `pyswisseph` pode falhar; a API deve continuar no ar e retornar `503` no endpoint de mapa quando a engine nativa nao estiver disponivel
 
+Observacao sobre estrutura:
+
+- com `Root Directory=api`, a Vercel detecta o app Python automaticamente a partir de `index.py`
+- nesse modo, nao e necessario mapear `functions` ou `routes` para `index.py` em `vercel.json`
+- manter o codigo da API dentro de `api/app/` continua compativel com FastAPI e com a Vercel
+
 Variaveis recomendadas na Vercel para a API:
 
 - `APP_NAME=Astro Kovesh API`
