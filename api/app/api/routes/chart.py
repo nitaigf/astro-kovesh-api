@@ -20,6 +20,8 @@ def create_chart(payload: ChartRequest) -> ChartData:
             status_code = status.HTTP_404_NOT_FOUND
         elif message.startswith("timezone_resolution_failed"):
             status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
+        elif message.startswith("astrology_engine_unavailable"):
+            status_code = status.HTTP_503_SERVICE_UNAVAILABLE
 
         raise HTTPException(
             status_code=status_code,

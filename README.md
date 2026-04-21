@@ -101,6 +101,12 @@ pip install -r requirements.txt
 python3 -m app.run
 ```
 
+Para desenvolvimento completo (inclui Swiss Ephemeris e testes):
+
+```bash
+pip install -r requirements-dev.txt
+```
+
 Observacao: `python3 -m app.run` usa `api/.env` para host/porta/configuracoes da API.
 
 OpenAPI:
@@ -394,6 +400,51 @@ docker compose up --build -d
 ```bash
 docker compose logs -f api web
 ```
+
+## Deploy na Vercel (Monorepo)
+
+Este repositorio pode ser publicado na Vercel em dois projetos separados:
+
+1. Projeto Web
+
+- Root Directory: `web`
+- Build Command: `bun run build`
+- Output Directory: `dist`
+- Variavel obrigatoria: `VITE_API_BASE_URL` apontando para a URL publica da API
+
+2. Projeto API
+
+- Root Directory: `api`
+- Entry point serverless: `api/index.py`
+- Configuracao: `api/vercel.json`
+- Variaveis de ambiente: mesmas chaves da secao de API em `.env`
+
+Observacao importante sobre runtime serverless:
+
+- Em ambientes sem suporte a extensoes nativas C, a engine astrologica (`pyswisseph`) pode nao estar disponivel.
+- Nessa situacao, a API inicia normalmente e `POST /v1/chart` responde `503` com codigo `chart_request_error` e mensagem iniciando com `astrology_engine_unavailable`.
+
+Arquivos de dependencias:
+
+- `api/requirements.txt`: runtime minimo (compatibilidade maior com serverless)
+- `api/requirements-astro.txt`: dependencias astrologicas nativas
+- `api/requirements-dev.txt`: runtime + astrologia + testes
+
+Recomendacao oficial nesta etapa:
+
+1. Manter frontend na Vercel.
+2. Publicar API na Vercel apenas se aceitar modo degradado sem engine astrologica nativa.
+3. Para resposta astrologica completa em producao, usar runtime com suporte a extensoes C (ex.: container dedicado).
+
+## Decisao sobre tRPC
+
+Nesta etapa nao faremos migracao para tRPC.
+
+Motivo principal:
+
+- o produto prioriza API publica estavel e independente de framework frontend.
+
+tRPC pode ser reavaliado no futuro apenas como camada interna complementar, sem substituir o contrato HTTP publico.
 
 ## Limitacoes atuais
 

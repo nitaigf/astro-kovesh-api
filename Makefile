@@ -30,7 +30,7 @@ help:
 	@echo "  make git-flow-hotfix-finish NAME=0.1.1"
 
 api-install:
-	cd $(API_DIR) && $(PYTHON) -m pip install -r requirements.txt
+	cd $(API_DIR) && $(PYTHON) -m pip install -r requirements-dev.txt
 
 api-run:
 	cd $(API_DIR) && $(PYTHON) -m app.run

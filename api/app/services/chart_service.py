@@ -2,7 +2,7 @@ from datetime import timezone
 from zoneinfo import ZoneInfo
 
 from app.schemas.chart import ChartRequest
-from app.services.astrology import AstrologyService
+from app.services.astrology import AstrologyEngineUnavailableError, AstrologyService
 from app.services.geocoding import GeocodingError, GeocodingRateLimitError, GeocodingService
 from app.services.timezone_service import TimezoneResolutionError, TimezoneService
 from app.utils.datetime_utils import combine_date_time
@@ -54,13 +54,16 @@ class ChartService:
         local_aware_dt = local_naive_dt.replace(tzinfo=ZoneInfo(timezone_name))
         utc_dt = local_aware_dt.astimezone(timezone.utc)
 
-        astro = self.astrology.calculate(
-            utc_dt=utc_dt,
-            lat=lat,
-            lng=lng,
-            zodiac_mode=payload.zodiac_mode.value,
-            house_system=payload.house_system.value,
-        )
+        try:
+            astro = self.astrology.calculate(
+                utc_dt=utc_dt,
+                lat=lat,
+                lng=lng,
+                zodiac_mode=payload.zodiac_mode.value,
+                house_system=payload.house_system.value,
+            )
+        except AstrologyEngineUnavailableError as exc:
+            raise ChartServiceError(f"astrology_engine_unavailable: {exc}") from exc
 
         return {
             "normalized_input": {

@@ -1,9 +1,11 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
 from datetime import datetime, timezone
 
-import swisseph as swe
+try:
+    import swisseph as swe
+except ModuleNotFoundError:
+    swe = None
 
 from app.schemas.chart import Aspect, HousePosition
 
@@ -31,44 +33,46 @@ MAJOR_ASPECTS = {
     "opposition": 180.0,
 }
 
-BODY_MAP = {
-    "Sun": swe.SUN,
-    "Moon": swe.MOON,
-    "Mercury": swe.MERCURY,
-    "Venus": swe.VENUS,
-    "Mars": swe.MARS,
-    "Jupiter": swe.JUPITER,
-    "Saturn": swe.SATURN,
-    "Uranus": swe.URANUS,
-    "Neptune": swe.NEPTUNE,
-    "Pluto": swe.PLUTO,
-}
+if swe:
+    BODY_MAP = {
+        "Sun": swe.SUN,
+        "Moon": swe.MOON,
+        "Mercury": swe.MERCURY,
+        "Venus": swe.VENUS,
+        "Mars": swe.MARS,
+        "Jupiter": swe.JUPITER,
+        "Saturn": swe.SATURN,
+        "Uranus": swe.URANUS,
+        "Neptune": swe.NEPTUNE,
+        "Pluto": swe.PLUTO,
+    }
 
-POINT_MAP = {
-    "North Node": swe.MEAN_NODE,
-}
+    POINT_MAP = {
+        "North Node": swe.MEAN_NODE,
+    }
 
-ASTEROID_MAP = {
-    "Chiron": swe.CHIRON,
-    "Ceres": swe.CERES,
-    "Pallas": swe.PALLAS,
-    "Juno": swe.JUNO,
-    "Vesta": swe.VESTA,
-}
+    ASTEROID_MAP = {
+        "Chiron": swe.CHIRON,
+        "Ceres": swe.CERES,
+        "Pallas": swe.PALLAS,
+        "Juno": swe.JUNO,
+        "Vesta": swe.VESTA,
+    }
 
-HOUSE_SYSTEM_CODE = {
-    "placidus": b"P",
-    "koch": b"K",
-    "whole_sign": b"W",
-}
+    HOUSE_SYSTEM_CODE = {
+        "placidus": b"P",
+        "koch": b"K",
+        "whole_sign": b"W",
+    }
+else:
+    BODY_MAP = {}
+    POINT_MAP = {}
+    ASTEROID_MAP = {}
+    HOUSE_SYSTEM_CODE = {}
 
 
-@dataclass
-class RawPosition:
-    name: str
-    longitude: float
-    latitude: float
-    speed: float
+class AstrologyEngineUnavailableError(Exception):
+    pass
 
 
 def normalize_degrees(value: float) -> float:
@@ -86,7 +90,8 @@ def degree_in_sign(longitude: float) -> float:
 
 class AstrologyService:
     def __init__(self) -> None:
-        swe.set_ephe_path(".")
+        if swe:
+            swe.set_ephe_path(".")
 
     def calculate(
         self,
@@ -96,6 +101,12 @@ class AstrologyService:
         zodiac_mode: str,
         house_system: str,
     ) -> dict:
+        if not swe:
+            raise AstrologyEngineUnavailableError(
+                "Swiss Ephemeris engine is unavailable in this runtime. "
+                "Install requirements-astro.txt or deploy API runtime with native-extension support."
+            )
+
         if utc_dt.tzinfo is None:
             utc_dt = utc_dt.replace(tzinfo=timezone.utc)
         utc_dt = utc_dt.astimezone(timezone.utc)
